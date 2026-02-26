@@ -24,35 +24,10 @@ try_again = True
 
 # --------------------------------------------------------------------------------------------------------------------
 
-def print_path(starting_actor, path):
-    degrees = (len(path) - 1) / 2
-
-    print(f"\nThis search shows that the actor {starting_actor} can be connected to Kevin Bacon in {int(degrees)} degrees:")
-    for i in range(0, len(path) - 2, 2):
-        actor1 = path[i]
-        movie = path[i + 1]
-        actor2 = path[i + 2]
-        print(f"{actor1} was in {movie} with {actor2}")
-
-
-def repeat_prompt():
-    answer = input("\nDo you want to try again? Y/N ")
-
-    if answer.lower() in ['y', 'yes']:
-        reset_search()
-        global try_again
-        try_again = True
-    else:
-        print("\nThank you for using >>> B . A . C . O . N <<")
-        try_again = False
-
-
 def search_1(starting_actor):
-    print("Searching", end=' ')
     try:
         search_queue.append(starting_actor)
         while search_queue:
-            print(".", end=' ')
             current_actor = search_queue.popleft()
             actor_search_query = "SELECT movie_title FROM movies JOIN movie_actors ON movies.movie_id = movie_actors.movie_id JOIN actors ON actors.actor_id = movie_actors.actor_id WHERE actors.actor_name = ?;"
             cursor.execute(actor_search_query, (current_actor,))
@@ -94,7 +69,6 @@ def search_1(starting_actor):
 
 
 def search_2(starting_actor):
-    print("Searching. . .\n")
     try:
         actor_search_query = "SELECT actor_id FROM actors WHERE actor_name = ?"
         cursor.execute(actor_search_query, (starting_actor,))
@@ -152,12 +126,34 @@ def search_2(starting_actor):
         print("\nUh-oh, there's an error with the database!", db_error)
 
 
+def print_path(starting_actor, path):
+    degrees = (len(path) - 1) / 2
+    print(f"\nThis search shows that the actor {starting_actor} can be connected to Kevin Bacon in {int(degrees)} degrees:")
+    for i in range(0, len(path) - 2, 2):
+        actor1 = path[i]
+        movie = path[i + 1]
+        actor2 = path[i + 2]
+        print(f"{actor1} was in {movie} with {actor2}")
+
+
 def reset_search():
     global bacon_graph, searched_actors, searched_movies, search_queue
     bacon_graph = nx.Graph()
     searched_actors = set()
     searched_movies = set()
     search_queue = deque()
+
+
+def repeat_prompt():
+    answer = input("\nDo you want to try again? Y/N ")
+
+    if answer.lower() in ['y', 'yes']:
+        reset_search()
+        global try_again
+        try_again = True
+    else:
+        print("\nThank you for using >>> B . A . C . O . N <<")
+        try_again = False
 
 
 def main():
@@ -185,6 +181,7 @@ def main():
     print("\t- indexed SQLite database")
     print("\t- database queries with joins")
     print("\t- queries matching actor name")
+    print("\n***NOTE: Please be prepared for a search time of up to several minutes***\n")
 
     while try_again:
         starting_actor = input("\nWhich actor would you like to search for? ")
@@ -197,16 +194,19 @@ def main():
             print("Nice try. Kevin Bacon is Kevin Bacon.")
 
         elif name_check_results and starting_actor != "Kevin Bacon":
-            search_no = 1
             search_start = time.perf_counter()
+            print("Searching . . .")
             search_1(starting_actor)
             search_stop = time.perf_counter()
             search_1_time = search_stop - search_start
             print(f"Search time was {search_1_time:.1f} seconds\n")
 
+            input("Press any key to begin the next search")
+            reset_search()
+
             print("*" * terminal_width)
 
-            print("\nNow onto our second search.")
+            print("\nThis search is a little different than the last one.")
             print("Features:")
             print("\t- indexed SQLite database")
             print("\t- database queries with no joins")
@@ -214,11 +214,14 @@ def main():
 
             reset_search()
             search_start = time.perf_counter()
+            print("Searching . . .")
             search_2(starting_actor)
             search_stop = time.perf_counter()
             search_2_time = search_stop - search_start
-            print(f"Search time was {search_2_time:.1f} seconds\n")
-            print("***NOTE: This search may have returned different results than the first, simply because actors may have multiple paths to Kevin Bacon***\n")
+            print(f"Search time was {search_2_time:.1f} seconds")
+            print("\n***NOTE: Results may be different from the previous search, simply because some actors have different paths to Kevin Bacon. The number of degrees separating them should be the same though.***")
+
+            input("\nPress any key to examine the results of these searches")
 
             print("*" * terminal_width)
 
