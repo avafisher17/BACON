@@ -4,6 +4,10 @@ The Bidirectional Actor Connection Optimization Network, or B.A.C.O.N, searches 
 
 The program compares two search modes: one comparing strings, and the other comparing integers from movie and actor ids.
 
+
+
+The needed movie database file is included in the repo. Also available is the script to run if you wish to populate your own database using an API Key from [The Movie Database](https://developer.themoviedb.org/docs/getting-started).
+
 ## Features
 
 * SQLite Database Integration
@@ -18,10 +22,7 @@ The program compares two search modes: one comparing strings, and the other comp
 3. Run "uv sync" to install dependencies
 4. Run "uv run python main.py"
 
-
-
 \*\*\*NOTE: The first search algorithm can be quite slow - sometimes taking minutes.\*\*\*
-
 \*\*\*Rest assured the program is still running and isn't frozen!\*\*\*
 
 ## Technologies Used
@@ -29,7 +30,7 @@ The program compares two search modes: one comparing strings, and the other comp
 * Python 3.12.5
 * Networkx
 * SQLite
-* The Movie Database API
+* [The Movie Database API](https://developer.themoviedb.org/docs/getting-started)
 
 ### Author
 
