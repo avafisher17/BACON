@@ -16,7 +16,13 @@ The program compares two search modes: one comparing strings, and the other comp
 1. Install [uv](https://astral.sh/uv)
 2. Clone the repo
 3. Run "uv sync" to install dependencies
-4. Run "uv run python "main.py"
+4. Run "uv run python main.py"
+
+
+
+\*\*\*NOTE: The first search algorithm can be quite slow - sometimes taking minutes.\*\*\*
+
+\*\*\*Rest assured the program is still running and isn't frozen!\*\*\*
 
 ## Technologies Used
 
