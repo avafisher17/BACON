@@ -16,7 +16,7 @@ The program compares two search modes: one comparing strings, and the other comp
 1. Install [uv](https://astral.sh/uv)
 2. Clone the repo
 3. Run "uv sync" to install dependencies
-4. Run "uv run python hangman.gui"
+4. Run "uv run python "main.py"
 
 ## Technologies Used
 
@@ -28,6 +28,4 @@ The program compares two search modes: one comparing strings, and the other comp
 ### Author
 
 Ava Fisher - [@avafisher17](https://github.com/avafisher17)
-
-
 
