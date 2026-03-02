@@ -59,6 +59,7 @@ def search_1(starting_actor):
                             search_queue.append(costar)
                             searched_actors.add(costar)
 
+
         # If all connections have been exhausted:
         if not search_queue:
             search_stop = time.perf_counter()
@@ -154,6 +155,19 @@ def reset_search():
     search_queue = deque()
 
 
+def get_node_count():
+    actors_created = []
+    movies_created = []
+    for node, data_type in bacon_graph.nodes(data=True):
+        node_type = data_type.get("type")
+        if node_type == "actor":
+            actors_created.append(node)
+        elif node_type == "movie":
+            movies_created.append(node)
+    return len(actors_created), len(movies_created)
+
+
+
 def repeat_prompt():
     answer = input("\nDo you want to try again? Y/N ")
 
@@ -183,7 +197,7 @@ def main():
 
     print("\nConventional wisdom holds that it takes 6 or less connections to get from any Hollywood actor to Kevin Bacon")
     print("Using a database of 10,000 English-language movies and more than 175,000 actors,")
-    print("\tour goal is to find the optimal search method that returns the path from one celebrity to our target\n")
+    print("\tour goal is to find the optimal search method that returns the path from one celebrity to another\n")
     print("*" * terminal_width)
 
     print("\nLet's start with our first search!")
@@ -210,7 +224,8 @@ def main():
             search_1(starting_actor)
             search_stop = time.perf_counter()
             search_1_time = search_stop - search_start
-            print(f"\nSearch time was {search_1_time:.1f} seconds\n")
+            print(f"\nSearch time was {search_1_time:.3f} seconds\n")
+            actor_count_1, movie_count_1 = get_node_count()
 
             input("Press any key to begin the next search\n")
             reset_search()
@@ -222,10 +237,9 @@ def main():
             print("\t- indexed SQLite database")
             print("\t- database queries with no joins")
             print("\t- queries matching id numbers")
-            print("\n***NOTE: Results may be different from the previous search, simply because some actors have different paths to Kevin Bacon.")
-            print("\tThe number of degrees separating them should be the same though.***\n")
+            print("\n***NOTE: Results may be different from the previous search, simply because some actors have multiple connections to Kevin Bacon. The number of degrees separating them should be the same though.***\n")
 
-            input("Press any key to begin the search")
+            input("Press any key to begin the search\n")
 
             reset_search()
             search_start = time.perf_counter()
@@ -233,33 +247,36 @@ def main():
             search_2(starting_actor)
             search_stop = time.perf_counter()
             search_2_time = search_stop - search_start
-            print(f"\nSearch time was {search_2_time:.1f} seconds")
+            print(f"\nSearch time was {search_2_time:.3f} seconds")
+            actor_count_2, movie_count_2 = get_node_count()
 
             input("\nPress any key to examine the results of these searches\n")
 
             print("*" * terminal_width)
 
-            print(f"\nSearch 1 time: {search_1_time:.1f} seconds")
-            print(f"Search 2 time: {search_2_time:.1f} seconds")
+            print(f"\nSearch 1 time: {search_1_time:.3f} seconds")
+            print(f"This algorithm searched through {actor_count_1} actors and {movie_count_1} movies before it found its desired results.\n")
+
+            print(f"Search 2 time: {search_2_time:.3f} seconds")
+            print(f"This algorithm searched through {actor_count_2} actors and {movie_count_2} movies before it found its desired results.\n")
 
             if search_2_time > search_1_time:
-                print("\nIt seems that Search 1 was faster than Search 2")
+                print("It seems that Search 1 was faster than Search 2")
                 print("That is... honestly unexpected.")
                 print("The string comparisons from Search 1 should have required more time than simply comparing integers in the actor and movie ids...")
                 print("But technology can just be funny sometimes.")
                 repeat_prompt()
 
             if search_2_time == search_1_time:
-                print("\nMy advice to you? Buy a lottery ticket.")
+                print("My advice to you? Buy a lottery ticket.")
                 print("Because you, Dear User, appear to be one of the luckiest people on the planet.")
                 print("You have been graced with nearly impossible odds...")
                 print("Let's hope such prosperity doesn't end once the program closes!")
                 repeat_prompt()
 
             if search_2_time < search_1_time:
-                print("\nJust as I suspected!")
+                print("Just as I suspected!")
                 print("Swapping out name strings for movie and actor ids really made a difference in the search speed.")
-                print("Honestly, most of the time came from matching up ids with their proper names.")
                 print("Clearly storing information as integers is the right way to go when searching!")
 
                 repeat_prompt()
