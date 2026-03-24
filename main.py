@@ -59,10 +59,8 @@ def search_1(starting_actor):
                             search_queue.append(costar)
                             searched_actors.add(costar)
 
-
         # If all connections have been exhausted:
         if not search_queue:
-            search_stop = time.perf_counter()
             print("\nYou won't believe this...")
             print(f"but in our whole database, we couldn't connect {starting_actor} to Kevin Bacon!")
             print(
@@ -205,7 +203,8 @@ def main():
     print("\t- indexed SQLite database")
     print("\t- database queries with joins")
     print("\t- queries matching actor name")
-    print("\n***NOTE: Please be prepared for a search time of up to several minutes***\n")
+    print("\n***NOTE: Please be prepared for a search time of up to several minutes")
+    print("\t(or try 'Dolly Parton' or 'Ice Cube' if you're in a time-crunch!)***\n")
 
     while try_again:
         starting_actor = input("\nWhich actor would you like to search for? ")
