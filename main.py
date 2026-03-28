@@ -24,6 +24,32 @@ try_again = True
 
 # --------------------------------------------------------------------------------------------------------------------
 
+class Timer:
+    def __init__(self):
+        self.start_time = None
+        self.elapsed = 0
+        self.running = False
+
+    def start(self):
+        if not self.running:
+            self.start_time = time.perf_counter()
+            self.running = True
+
+    def stop(self):
+        if self.running:
+            self.elapsed = time.perf_counter() - self.start_time
+            self.running = False
+
+    def reset(self):
+        self.start_time = None
+        self.elapsed = 0
+        self.running = False
+
+    def elapsed_time(self):
+        if not self.running:
+            return self.elapsed
+
+
 def search_1(starting_actor):
     try:
         search_queue.append(starting_actor)
@@ -165,7 +191,6 @@ def get_node_count():
     return len(actors_created), len(movies_created)
 
 
-
 def repeat_prompt():
     answer = input("\nDo you want to try again? Y/N ")
 
@@ -207,6 +232,8 @@ def main():
     print("\t(or try 'Dolly Parton' or 'Ice Cube' if you're in a time-crunch!)***\n")
 
     while try_again:
+        timer = Timer()
+
         starting_actor = input("\nWhich actor would you like to search for? ")
 
         # Check to see if the actor is usable/in the database
@@ -218,11 +245,11 @@ def main():
             print("\nNice try. Kevin Bacon is Kevin Bacon.")
 
         elif name_check_results and starting_actor != "Kevin Bacon":
-            search_start = time.perf_counter()
+            timer.start()
             print("\nSearching . . .")
             search_1(starting_actor)
-            search_stop = time.perf_counter()
-            search_1_time = search_stop - search_start
+            timer.stop()
+            search_1_time = timer.elapsed_time()
             print(f"\nSearch time was {search_1_time:.3f} seconds\n")
             actor_count_1, movie_count_1 = get_node_count()
 
@@ -241,11 +268,11 @@ def main():
             input("Press any key to begin the search\n")
 
             reset_search()
-            search_start = time.perf_counter()
+            timer.start()
             print("Searching . . .")
             search_2(starting_actor)
-            search_stop = time.perf_counter()
-            search_2_time = search_stop - search_start
+            timer.stop()
+            search_2_time = timer.elapsed_time()
             print(f"\nSearch time was {search_2_time:.3f} seconds")
             actor_count_2, movie_count_2 = get_node_count()
 
